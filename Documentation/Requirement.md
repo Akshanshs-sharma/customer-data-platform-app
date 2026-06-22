@@ -1,26 +1,5 @@
 ## Requirements Reconciliation
 
-### What the Assignment Adds That We're Missing
-
-**1. Address Management (multi-address per customer)**
-The assignment explicitly requires billing + shipping addresses, multiple addresses per customer. Our FR-01 only says "name, email, phone" — too narrow.
-
-**2. Contact Mechanisms (multiple per customer)**
-Email, phone numbers, social media handles — all as separate, multiple entries per customer. We lumped this into FR-01. It needs its own requirement.
-
-**3. Customer Preferences**
-Marketing opt-ins, preferred communication channels. We never captured this at all.
-
-**4. Shopify Integration**
-Ingesting customer data specifically from Shopify's Customer API — mapping, transformation, upsert logic. This is an entirely new requirement we didn't have.
-
-**5. UDM Compliance**
-The schema must follow the **Universal Data Model Party module** structure. This is a design constraint that affects everything — it's not a feature but it needs to be stated as a requirement.
-
----
-
-## Revised & Reconciled Requirements
-
 ### Functional Requirements
 
 **FR-01 — Customer Profile Management**
