@@ -6,29 +6,26 @@
 
 ## 1. System Context Diagram
 
-The context diagram defines the operational boundary of the NotNaked CDP, highlighting the external data producers, consumer actors, and the automated scheduling engines interacting with the platform.
+The context diagram defines the operational boundary of the NotNaked CDP, highlighting the external data producers, human administrators, and internal automated processes interacting with the core engine.
 
 ```mermaid
 graph TD
     %% System Boundary
     subgraph CDP_Boundary [NotNaked CDP System Boundary]
         CDP_Core[CDP Ingestion Engine & Profile Datastore]
+        Scheduler[CDP Engine Scheduler<br/>Internal Automated Actor]
     end
 
     %% External System Actors
-    Shopify[Shopify Core Platform<br/>External Actor]
-    
-    %% Human Actors
+    Shopify[Shopify Core Platform<br/>External System Actor]
     Analyst[Data Analyst / CDP Manager<br/>Human Actor]
-    
-    %% Automated/Internal System Actors
-    Scheduler[CDP Engine Scheduler<br/>Automated Cron Actor]
 
     %% Data Flows
-    Shopify -->|1. Real-time Webhooks & Customer Payloads| CDP_Core
-    CDP_Core -.->|2. Batch Request Pulls| Shopify
+    Shopify -->|1. Transmits Real-time Webhook Payloads| CDP_Core
+    CDP_Core -.->|2. Returns Synchronous HTTP Status Acknowledgement| Shopify
+    CDP_Core -->|3. Initiates Scheduled Batch API Data Pulls| Shopify
     
-    Analyst -->|3. Segment Definitions & Query Parameters| CDP_Core
-    CDP_Core -->|4. Profile Views & Historical Logs| Analyst
+    Analyst -->|4. Configures Segment Rules & Query Constraints| CDP_Core
+    CDP_Core -->|5. Serves Profile Views & Chronological Event History| Analyst
 
-    Scheduler -->|5. Scheduled Cron Trigger Evaluation| CDP_Core
+    Scheduler -->|6. Triggers Asynchronous Processing, Identity Resolution & Segment Evaluation| CDP_Core
