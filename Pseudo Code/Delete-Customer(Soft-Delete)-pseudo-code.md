@@ -1,9 +1,5 @@
 ## 🛠️ Moving Forward: Flow 4 — Soft-Delete Data Profile Lifecycle
 
-Now that our architectural choices are fully documented and explained, we are ready to build **Flow 4: Soft-Delete Data Profile Lifecycle**.
-
-In an enterprise Customer Data Platform (CDP), executing a hard SQL `DELETE` is highly dangerous. It breaks database foreign key rules with historical orders, wipes out active marketing opt-out logs, and ruins behavioral attribution models. To maintain data integrity while respecting user privacy rules, we use a **Temporal Soft-Decommission Pattern**.
-
 ### 🎯 Step A: Textual Flowchart — Soft-Delete Engine
 
 ```text
@@ -133,6 +129,3 @@ END SERVICE METHOD
 
 ```
 
-All core framework CRUD operations (Part 2) are officially built, optimized, and documented.
-
-Next up is the final part of your assignment: **The 4 distinct sub-flows of the Part 3 Shopify Ingestion Pipeline**. Let's start with **Flow 5.1: API Data Fetcher & Network Error Handler**. Are you ready to map out this network layer?
