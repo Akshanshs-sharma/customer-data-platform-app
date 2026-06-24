@@ -76,3 +76,26 @@
 * **Our Strategic Choice:** **Cross-Reference Registry (`CDP_PARTY_IDENTIFICATION`).** We chose an open, extensible catalog design. Every incoming third-party key is treated as an independent row categorized by an identification type, such as `PARTY_IDENT_TYPE_ID = 'SHOPIFY_CUST_ID'`. This allows us to connect an unlimited number of downstream systems without changing a single column structure.
 
 ---
+
+
+### 📝 Entry 1: Rationale for Soft-Deleting Customers via Temporal Roles
+
+* **Context:** When a request is received to delete a customer profile from the platform, a traditional database pattern might execute a destructive `DELETE FROM customer_table` query.
+* **Design Decision:** The Customer Data Platform (CDP) strictly forbids executing hard SQL `DELETE` operations on any customer records. Instead, we use a **Temporal Soft-Decommission Pattern** by setting the `THRU_DATE` column in the **`CDP_PARTY_ROLE`** table to the current timestamp (`THRU_DATE = SYSTEM.getCurrentTimestamp()`).
+* **Engineering Rationale & Trade-offs:**
+* **Preserves Referential Integrity:** Historical transactional data, such as sales invoices, fulfillment details, and interaction logs, are permanently linked via foreign key constraints to the master `PARTY_ID`. A hard deletion would break referential integrity, causing orphaned records or disrupting historical revenue reporting.
+* **Regulatory Audit Compliance:** For data privacy frameworks like GDPR and CCPA, keeping a record with an explicit closure timestamp provides an immutable audit trail. This proves exactly *when* consumer profiling and marketing consent were deactivated, without corrupting the core business data ledger.
+
+
+
+---
+
+### 📝 Entry 2: Rationale against Disabling the Master `CDP_PARTY` Entity
+
+* **Context:** When soft-deleting a customer, one alternative is to introduce a global status column like `is_disabled` or `status_id` directly within the core identity table (`CDP_PARTY`).
+* **Design Decision:** The system intentionally leaves the master **`CDP_PARTY`** and **`CDP_PERSON`** records untouched during a customer deletion lifecycle. The platform does *not* set a global inactive flag on the core identity row.
+* **Engineering Rationale & Trade-offs:**
+* **Support for Multi-Tenant Persona Roles:** In an enterprise Universal Data Model (UDM), a single human entity (`CDP_PERSON`) can concurrently hold multiple business relationships with the company. For example, an individual might simultaneously be a **Retail Customer**, an **Employee**, and a **B2B Affiliate Partner**.
+* **Isolation of Business Context:** If a global `is_disabled = true` flag were applied to the master `CDP_PARTY` record, it would completely deactivate that individual across all corporate systems. By keeping deactivation contained within the **`CDP_PARTY_ROLE`** mapping table, we can safely decommission their consumer relationship while keeping their internal employee identity or partner profile fully operational.
+
+---
