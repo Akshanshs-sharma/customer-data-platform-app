@@ -168,7 +168,3 @@ SERVICE METHOD: party.updateCustomerProfile
 END SERVICE METHOD
 
 ```
-
----
-
-Now that this optimization is implemented, let's step straight into **Flow 4: Soft-Delete Data Profile Lifecycle**. Shall we draw the flowchart map for that component next?
